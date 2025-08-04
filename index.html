@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>National Saleha Day</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Arial', sans-serif;
+      background-color: #111;
+      color: white;
+      text-align: center;
+    }
+    #password-screen, #main-content, .section {
+      display: none;
+      padding: 20px;
+    }
+    #password-screen {
+      display: block;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 1em;
+      margin: 10px;
+      border: none;
+      background-color: #ff69b4;
+      color: white;
+      cursor: pointer;
+    }
+    iframe, video, canvas {
+      width: 80%;
+      max-width: 600px;
+      margin-top: 20px;
+    }
+    .pixel-heart {
+      display: inline-block;
+      width: 32px;
+      height: 32px;
+      background: url('pixel_heart.png') no-repeat center;
+      background-size: contain;
+      margin: 4px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- 🔐 Password Screen -->
+<div id="password-screen">
+  <h1>Welcome to National Saleha Day!</h1>
+  <p>Enter the secret password:</p>
+  <input type="password" id="password-input">
+  <button onclick="checkPassword()">Enter</button>
+  <p id="error-msg" style="color: red;"></p>
+</div>
+
+<!-- 🧁 Main Content -->
+<div id="main-content">
+  <h1>Happy National Saleha Day 🎉</h1>
+  <div>
+    <button onclick="showSection('music')">🎵 Music Video</button>
+    <button onclick="showSection('bday')">🎉 Birthday Message</button>
+    <button onclick="showSection('game')">🕹️ Flappy Saleha</button>
+    <button onclick="showSection('hearts')">❤️ Pixel Hearts</button>
+  </div>
+
+  <!-- 🎵 Section 1: Music Video -->
+  <div class="section" id="music">
+    <h2>🎶 Special Song</h2>
+    <audio controls src="your_song.mp3"></audio>
+    <p>
+      Lyrics:<br>
+      <em>
+        You’re the light in every day,<br>
+        National Saleha, hooray!<br>
+        (You can write real lyrics here!)
+      </em>
+    </p>
+    <video controls src="ai_music_video.mp4"></video>
+  </div>
+
+  <!-- 🎉 Section 2: Birthday Message -->
+  <div class="section" id="bday">
+    <h2>🎂 From Me to You</h2>
+    <video controls src="capcut_birthday_message.mp4"></video>
+  </div>
+
+  <!-- 🕹️ Section 3: Flappy Saleha -->
+  <div class="section" id="game">
+    <h2>🕹️ Flappy Saleha</h2>
+    <iframe src="https://your-flappy-saleha-game.glitch.me" width="400" height="600"></iframe>
+  </div>
+
+  <!-- ❤️ Section 4: Pixel Hearts -->
+  <div class="section" id="hearts">
+    <h2>❤️ Saleha's Hearts</h2>
+    <p>Each heart is a memory, a moment, a little 'ily' digitized 💖</p>
+    <div id="hearts-container"></div>
+  </div>
+</div>
+
+<script>
+  const PASSWORD = "nationalsalehaday";
+  function checkPassword() {
+    const input = document.getElementById('password-input').value;
+    if (input === PASSWORD) {
+      document.getElementById('password-screen').style.display = 'none';
+      document.getElementById('main-content').style.display = 'block';
+    } else {
+      document.getElementById('error-msg').innerText = 'Wrong password!';
+    }
+  }
+
+  function showSection(id) {
+    document.querySelectorAll('.section').forEach(sec => sec.style.display = 'none');
+    document.getElementById(id).style.display = 'block';
+  }
+
+  // Load pixel hearts dynamically
+  window.onload = () => {
+    const heartContainer = document.getElementById('hearts-container');
+    for (let i = 0; i < 30; i++) {
+      let heart = document.createElement('div');
+      heart.className = 'pixel-heart';
+      heartContainer.appendChild(heart);
+    }
+  }
+</script>
+
+</body>
+</html>
