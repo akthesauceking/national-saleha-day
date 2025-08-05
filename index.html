@@ -43,19 +43,11 @@
       border: 1px solid #ff69b4;
     }
 
-    iframe, audio, canvas {
+    iframe {
       width: 90%;
       max-width: 600px;
       margin-top: 20px;
-    }
-
-    .pixel-heart {
-      display: inline-block;
-      width: 32px;
-      height: 32px;
-      background: url('pixel_heart.png') no-repeat center;
-      background-size: contain;
-      margin: 4px;
+      border-radius: 12px;
     }
 
     h1, h2 {
@@ -64,6 +56,47 @@
 
     p, em {
       color: #cc2e78;
+    }
+
+    /* Pixel Heart Section */
+    #big-heart {
+      display: grid;
+      grid-template-columns: repeat(7, 60px);
+      gap: 8px;
+      justify-content: center;
+      margin-top: 30px;
+    }
+
+    .heart-box {
+      cursor: pointer;
+      width: 60px;
+      height: 60px;
+      background: url('pixel_heart.png') no-repeat center;
+      background-size: contain;
+      position: relative;
+    }
+
+    .heart-title {
+      font-size: 10px;
+      color: #d63384;
+      margin-top: 4px;
+      text-align: center;
+    }
+
+    .popup {
+      position: absolute;
+      bottom: 70px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 160px;
+      background-color: white;
+      color: #d63384;
+      font-size: 12px;
+      border-radius: 8px;
+      padding: 8px;
+      z-index: 10;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      display: none;
     }
   </style>
 </head>
@@ -82,51 +115,35 @@
 <div id="main-content">
   <h1>Happy National Saleha Day 🎉</h1>
   <div>
-    <button onclick="showSection('music')">🎵 Music Video</button>
     <button onclick="showSection('bday')">🎉 Birthday Message</button>
     <button onclick="showSection('game')">🕹️ Flappy Saleha</button>
     <button onclick="showSection('hearts')">❤️ Pixel Hearts</button>
   </div>
 
-  <!-- 🎵 Section 1: Music Video -->
-  <div class="section" id="music">
-    <h2>🎶 Special Song</h2>
-    <audio controls src="your_song.mp3"></audio>
-    <p>
-      Lyrics:<br>
-      <em>
-        You’re the light in every day,<br>
-        National Saleha, hooray!<br>
-        You laugh, the world glows brighter,<br>
-        With you, my heart feels lighter 💖
-      </em>
-    </p>
-    <video controls src="ai_music_video.mp4"></video>
-  </div>
-
-  <!-- 🎉 Section 2: Birthday Message -->
+  <!-- 🎉 Section: Birthday Message -->
   <div class="section" id="bday">
     <h2>🎂 From Me to You</h2>
     <iframe src="https://drive.google.com/file/d/1kbmo3FQIMqr5UqeU4X76FV-zqYJmkVTv/preview" width="640" height="480" allow="autoplay"></iframe>
   </div>
 
-  <!-- 🕹️ Section 3: Flappy Saleha -->
+  <!-- 🕹️ Section: Flappy Saleha -->
   <div class="section" id="game">
     <h2>🕹️ Flappy Saleha</h2>
     <p>Game loading...</p>
     <iframe src="https://your-flappy-saleha-game.glitch.me" width="400" height="600"></iframe>
   </div>
 
-  <!-- ❤️ Section 4: Pixel Hearts -->
+  <!-- ❤️ Section: Pixel Hearts -->
   <div class="section" id="hearts">
     <h2>❤️ Saleha's Hearts</h2>
-    <p>Every pixel heart is one “I love you” 💗</p>
-    <div id="hearts-container"></div>
+    <p>Click a heart to see why I love you 💖</p>
+    <div id="big-heart"></div>
   </div>
 </div>
 
 <script>
   const PASSWORD = "nationalsalehaday";
+
   function checkPassword() {
     const input = document.getElementById('password-input').value;
     if (input === PASSWORD) {
@@ -142,14 +159,65 @@
     document.getElementById(id).style.display = 'block';
   }
 
-  window.onload = () => {
-    const heartContainer = document.getElementById('hearts-container');
-    for (let i = 0; i < 30; i++) {
-      let heart = document.createElement('div');
-      heart.className = 'pixel-heart';
-      heartContainer.appendChild(heart);
-    }
+  const heartData = [
+    // 1 MAIN LOVE
+    { title: "Her Smile", message: "Her smile is my whole world. If heaven had a look, it's that." },
+
+    // 6 FAVORITE THINGS SHE DOES
+    { title: "Comforts Me", message: "When I'm broken, she patches me back together softly." },
+    { title: "Plays Roblox", message: "We may be 19, but Roblox with you is elite." },
+    { title: "Gives Advice", message: "Your words are wise, even when you're half-asleep." },
+    { title: "Rebounds", message: "You get boards like Dennis Rodman with a Juicy Couture bag." },
+    { title: "Buys Food", message: "You feed my soul... and my stomach 🥲." },
+    { title: "Always Shows Up", message: "No matter what, you're there. Always." },
+
+    // 6 FAVORITE THINGS SHE SAYS
+    { title: "I love you", message: "When you say this, it rewires my brain with joy." },
+    { title: "You're my cutie", message: "I'm yours. Fully. Every time." },
+    { title: "You're annoying", message: "This is when I know I'm winning 😌." },
+    { title: "My rat", message: "You call me that with so much love it's iconic." },
+    { title: "My love", message: "Hearing this? Instant serotonin." },
+    { title: "Sleep, now", message: "Bossy, gentle, perfect. Like a bedtime mafia 💀." },
+
+    // 6 FAVORITE THINGS ABOUT HER
+    { title: "Her Lips", message: "Soft like poetry. Warm like home." },
+    { title: "Her Teeth", message: "Cutest chompers in the galaxy 😬🦷💗." },
+    { title: "Her A—", message: "Uhhh… scientifically immaculate. My hand knows this well 💀." },
+    { title: "Her Hands", message: "So warm, they could replace the sun." },
+    { title: "Her Brows", message: "Arched like art. Styled like royalty." },
+    { title: "Her Eyes", message: "I look and get lost, and I like it." }
+  ];
+
+  function createHeartGrid() {
+    const container = document.getElementById('big-heart');
+    heartData.forEach((heart) => {
+      const box = document.createElement('div');
+      box.className = 'heart-box';
+      box.title = heart.title;
+
+      const popup = document.createElement('div');
+      popup.className = 'popup';
+      popup.innerText = heart.message;
+
+      const label = document.createElement('div');
+      label.className = 'heart-title';
+      label.innerText = heart.title;
+
+      box.appendChild(popup);
+      container.appendChild(box);
+      container.appendChild(label);
+
+      box.addEventListener('click', () => {
+        const isVisible = popup.style.display === 'block';
+        document.querySelectorAll('.popup').forEach(p => p.style.display = 'none');
+        popup.style.display = isVisible ? 'none' : 'block';
+      });
+    });
   }
+
+  window.onload = () => {
+    createHeartGrid();
+  };
 </script>
 
 </body>
