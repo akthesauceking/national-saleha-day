@@ -7,31 +7,48 @@
     body {
       margin: 0;
       font-family: 'Arial', sans-serif;
-      background-color: #111;
-      color: white;
+      background-color: #ffe6f0;
+      color: #d63384;
       text-align: center;
     }
+
     #password-screen, #main-content, .section {
       display: none;
       padding: 20px;
     }
+
     #password-screen {
       display: block;
     }
+
     button {
       padding: 10px 20px;
       font-size: 1em;
       margin: 10px;
       border: none;
+      border-radius: 10px;
       background-color: #ff69b4;
       color: white;
       cursor: pointer;
+      transition: background 0.3s;
     }
-    iframe, video, canvas {
-      width: 80%;
+
+    button:hover {
+      background-color: #ff85c1;
+    }
+
+    input[type="password"] {
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ff69b4;
+    }
+
+    iframe, audio, canvas {
+      width: 90%;
       max-width: 600px;
       margin-top: 20px;
     }
+
     .pixel-heart {
       display: inline-block;
       width: 32px;
@@ -39,6 +56,14 @@
       background: url('pixel_heart.png') no-repeat center;
       background-size: contain;
       margin: 4px;
+    }
+
+    h1, h2 {
+      color: #d63384;
+    }
+
+    p, em {
+      color: #cc2e78;
     }
   </style>
 </head>
@@ -72,7 +97,8 @@
       <em>
         You’re the light in every day,<br>
         National Saleha, hooray!<br>
-        (You can write real lyrics here!)
+        You laugh, the world glows brighter,<br>
+        With you, my heart feels lighter 💖
       </em>
     </p>
     <video controls src="ai_music_video.mp4"></video>
@@ -81,19 +107,20 @@
   <!-- 🎉 Section 2: Birthday Message -->
   <div class="section" id="bday">
     <h2>🎂 From Me to You</h2>
-    <video controls src="capcut_birthday_message.mp4"></video>
+    <iframe src="https://drive.google.com/file/d/1kbmo3FQIMqr5UqeU4X76FV-zqYJmkVTv/preview" width="640" height="480" allow="autoplay"></iframe>
   </div>
 
   <!-- 🕹️ Section 3: Flappy Saleha -->
   <div class="section" id="game">
     <h2>🕹️ Flappy Saleha</h2>
+    <p>Game loading...</p>
     <iframe src="https://your-flappy-saleha-game.glitch.me" width="400" height="600"></iframe>
   </div>
 
   <!-- ❤️ Section 4: Pixel Hearts -->
   <div class="section" id="hearts">
     <h2>❤️ Saleha's Hearts</h2>
-    <p>Each heart is a memory, a moment, a little 'ily' digitized 💖</p>
+    <p>Every pixel heart is one “I love you” 💗</p>
     <div id="hearts-container"></div>
   </div>
 </div>
@@ -115,7 +142,6 @@
     document.getElementById(id).style.display = 'block';
   }
 
-  // Load pixel hearts dynamically
   window.onload = () => {
     const heartContainer = document.getElementById('hearts-container');
     for (let i = 0; i < 30; i++) {
