@@ -344,6 +344,79 @@
       box-shadow: 0 5px 15px rgba(255, 105, 180, 0.4);
     }
 
+    /* Styles for Letters Jar */
+    .note-dot {
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      margin: 3px;
+    }
+
+    #notes-inside {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-content: flex-end;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    #jar {
+      width: 200px;
+      height: 250px;
+      margin: 20px auto;
+      background: #ffe4e1;
+      border: 2px solid #ff69b4;
+      border-radius: 0 0 100px 100px / 0 0 50px 50px;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    #newNote {
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ff69b4;
+      width: 300px;
+      max-width: 80%;
+    }
+
+    #coupons-section {
+      max-width: 700px;
+      margin: 30px auto;
+      text-align: center;
+      font-family: 'Arial', sans-serif;
+      color: #d63384;
+    }
+    #coupons-section h2 {
+      margin-bottom: 20px;
+    }
+    .coupon-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 15px;
+    }
+    .coupon-card {
+      background: #ff85c1;
+      border-radius: 12px;
+      padding: 15px 20px;
+      box-shadow: 0 3px 8px rgba(246, 63, 127, 0.5);
+      cursor: pointer;
+      user-select: none;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      font-weight: 600;
+    }
+    .coupon-card.redeemed {
+      background: #ffd6e8;
+      color: #a73572;
+      text-decoration: line-through;
+      box-shadow: none;
+      cursor: default;
+    }
+
     @media (max-width: 768px) {
       .dino-game-canvas {
         width: 100%;
@@ -453,6 +526,8 @@
     <button onclick="showSection('bday')">🎂 Birthday Message</button>
     <button onclick="showSection('game')">🦖 Dino Saleha</button>
     <button onclick="showSection('hearts')">❤️ Pixel Hearts</button>
+    <button onclick="showSection('jar')">💌 Letters Jar</button>
+    <button onclick="showSection('coupons')">🎟️ Coupons</button>
   </div>
 
   <!-- 📹 Birthday Message -->
@@ -495,7 +570,7 @@
     <div id="heart-container">
         <div class="heart-grid">
             <!-- My Favorite Things You Do (6 hearts) -->
-            <div class="heart favorite-things" data-theme="My Favorite Things You Do" data-message="You comfort me when I get sad asf.>
+            <div class="heart favorite-things" data-theme="My Favorite Things You Do" data-message="You comfort me when I get sad asf.">
                 <span class="tooltip">My Favorite Things You Do</span>
             </div>
             <div class="heart favorite-things" data-theme="My Favorite Things You Do" data-message="You make me laugh till the point I can't breathe with your lil teasing.">
@@ -561,14 +636,45 @@
         </div>
     </div>
   </div>
+
+  <!-- 💌 Letters Jar Section -->
+  <div class="section" id="jar">
+    <h2>💌 Saleha's Love Notes Jar</h2>
+    <p>Click the jar to pull a random love note! Or add your own. 💖</p>
+    <div id="jar">
+      <div id="notes-inside"></div>
+    </div>
+    <p id="countText"></p>
+    <button id="pullBtn">Pull a Note</button>
+    <div style="margin-top:20px;">
+      <input id="newNote" type="text" placeholder="Add a new note...">
+      <button id="addNoteBtn">Add Note</button>
+    </div>
+    <button id="clearNotesBtn">Reset Jar</button>
+  </div>
+
+  <!-- 🎟️ Coupons Section -->
+  <div class="section" id="coupons">
+    <h2>🎟️ Coupons for Saleha</h2>
+    <p>Click a coupon to redeem it 💖</p>
+    <div class="coupon-list" id="couponList"></div>
+  </div>
 </div>
 
-<!-- Modal -->
+<!-- Modal for Hearts -->
 <div class="modal" id="modal">
   <div class="modal-content">
     <h2 id="modal-title"></h2>
     <p id="modal-message"></p>
     <button class="close-btn" onclick="closeModal()">Close ❤️</button>
+  </div>
+</div>
+
+<!-- Popup for Notes Jar -->
+<div id="notePopup" style="display:none; position:fixed; z-index:1001; left:0; top:0; width:100%; height:100%; background:rgba(255,182,193,0.8); display:flex; align-items:center; justify-content:center;">
+  <div style="background:linear-gradient(135deg, #ffffff 0%, #ffeef8 100%); padding:40px; border-radius:30px; max-width:400px; text-align:center; box-shadow:0 20px 40px rgba(255,182,193,0.4); border:3px solid #ffb6c1;">
+    <p id="popupContent" style="color:#6b4c57; font-size:18px; line-height:1.6; margin-bottom:30px; font-style:italic;"></p>
+    <button id="closePopup" style="background:linear-gradient(135deg, #ff6b9d, #c44569); color:white; border:none; padding:12px 24px; border-radius:25px; cursor:pointer; font-size:16px; font-weight:bold;">Close ❤️</button>
   </div>
 </div>
 
@@ -950,6 +1056,226 @@
     // Reset game state
     initDinoGame();
   }
+</script>
+
+<script>
+  const STORAGE_KEY = "saleha_letters_jar_v1";
+  const defaultNotes = [
+    "you are forever my pretty dumpling",
+    "i love you even when you overthink",
+    "you are my best friend",
+    "i will forever chresh you",
+    "sometimes ig you are OKAY at uno",
+    "sometimes ig you are OKAY at 8 ball",
+    "you SUCK at watermelon go (jk you are actually really smart and good)",
+    "you are a GENIUS my love",
+    "you are my favorite human",
+    "your face >>>",
+    "your smile >>>",
+    "i love you more than calc",
+    "your laugh is so contagious my cutie",
+    "i’m keeping you forever DUH",
+    "sometimes i wonder how i got so lucky (then i remember i’m HIM )",
+    "you are literally the main character in my head",
+    "you are my comfort person",
+    "you are my safe place",
+    "u make every boring day stupidly fun",
+    "if we were in a video game, you’d be my favorite pokemon",
+    "your texts make my day go from bruh to IEFBABUFEFAF SHES SO PRETTY in 0.00003 seconds",
+    "you smell like home to me",
+    "you make pink look jealous of you",
+    "you’re the wifi to my heart, no connection without you"
+  ];
+
+  function loadNotes() {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultNotes));
+      return [...defaultNotes];
+    }
+    try {
+      return JSON.parse(raw);
+    } catch {
+      return [...defaultNotes];
+    }
+  }
+
+  function saveNotes(arr) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
+    renderNotesDots();
+  }
+
+  function renderNotesDots() {
+    const notes = loadNotes();
+    const container = document.getElementById("notes-inside");
+    container.innerHTML = "";
+    notes.slice(0, 20).forEach((n,i) => {
+      const dot = document.createElement("div");
+      dot.className = "note-dot";
+      const colors = ["#ff87c1","#ff5fa1","#ffd1e6","#ffc0db","#ff9ccf","#ffd6e8"];
+      dot.style.background = colors[i % colors.length];
+      container.appendChild(dot);
+    });
+    document.getElementById("countText").innerText = `${notes.length} note${notes.length===1?"":"s"} in the jar`;
+  }
+
+  function pullRandomNote() {
+    const notes = loadNotes();
+    if (!notes.length) {
+      showPopup("The jar is empty. Add a note!");
+      return;
+    }
+    const idx = Math.floor(Math.random()*notes.length);
+    const note = notes[idx];
+    showPopup(note);
+  }
+
+  function showPopup(text) {
+    const popup = document.getElementById("notePopup");
+    document.getElementById("popupContent").innerText = text;
+    popup.style.display = "flex";
+    popup.setAttribute("aria-hidden","false");
+  }
+
+  function hidePopup() {
+    const popup = document.getElementById("notePopup");
+    popup.style.display = "none";
+    popup.setAttribute("aria-hidden","true");
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    renderNotesDots();
+    document.getElementById("jar").addEventListener("click", pullRandomNote);
+    document.getElementById("pullBtn").addEventListener("click", pullRandomNote);
+    document.getElementById("addNoteBtn").addEventListener("click", () => {
+      const text = document.getElementById("newNote").value.trim();
+      if (!text) return alert("Write a short note first.");
+      const notes = loadNotes();
+      notes.unshift(text);
+      saveNotes(notes);
+      document.getElementById("newNote").value = "";
+      showPopup("Added! Pull the jar to see it.");
+    });
+    document.getElementById("clearNotesBtn").addEventListener("click", () => {
+      if (!confirm("Reset the jar? This will delete all saved notes in this browser.")) return;
+      localStorage.removeItem(STORAGE_KEY);
+      renderNotesDots();
+      showPopup("Jar reset. I added some starter notes for you.");
+    });
+    document.getElementById("closePopup").addEventListener("click", hidePopup);
+    window.addEventListener("click", (e) => {
+      const popup = document.getElementById("notePopup");
+      if (popup.style.display === "flex" && !popup.contains(e.target) && !document.getElementById("jar").contains(e.target)) {
+        hidePopup();
+      }
+    });
+  });
+</script>
+
+<script>
+  const COUPON_STORAGE_KEY = 'saleha_coupons_redeemed_v1';
+
+  const coupons = [
+    "Ahnaf has to sing any song you want 🎤",
+    "Ahnaf has to play any game you want 🎮",
+    "Ahnaf gives you a 10-minute forehead massage 💆‍♀️",
+    "Ahnaf writes you a mini poem ✍️",
+    "Ahnaf owes you a 'Yes Hour' ✅",
+    "Ahnaf must compliment you 10 times in a row 💖",
+    "Ahnaf makes you laugh until you snort 😂",
+    "Ahnaf gives you a shoulder massage 💆",
+    "Ahnaf draws a doodle of you 🎨",
+    "Ahnaf tells you 5 reasons he loves you 💌",
+    "Ahnaf lets you steal his hoodie 🧥",
+    "Ahnaf plays Roblox with you for 2 hours straight 🎮",
+    "Ahnaf calls you 10 cute nicknames in one go 🥺",
+    "Ahnaf dances for you 💃",
+    "Ahnaf learns a TikTok dance with you 📱",
+    "Ahnaf writes you a love letter 💌",
+    "Ahnaf plays your favorite playlist all day 🎶",
+    "Ahnaf wears matching outfits with you 👕",
+    "Ahnaf takes aesthetic pics of you 📸",
+    "Ahnaf watches your favorite show with you 📺",
+    "Ahnaf lets you paint his nails 💅",
+    "Ahnaf listens to your rant with no interruptions 😌",
+    "Ahnaf makes a paper origami heart for you ❤️",
+    "Ahnaf pretends to be your butler for an hour 🛎️",
+    "Ahnaf makes a funny video just for you 📹",
+    "Ahnaf hugs you for 5 minutes straight 🤗",
+    "Ahnaf draws a heart on his hand for you 🖤",
+    "Ahnaf sings you to sleep 🌙",
+    "Ahnaf plays your favorite childhood game with you 🕹️",
+    "Ahnaf calls you a hundred cute nicknames in one day 🥺",
+    "Ahnaf lets you style his hair 💇‍♂️",
+    "Ahnaf writes your name 50 times in different styles ✒️",
+    "Ahnaf lets you choose his outfit for a day 👔",
+    "Ahnaf learns something new just for you 💡",
+    "Ahnaf gives you a 'no phone' hour to be fully present 📵",
+    "Ahnaf makes a surprise note for you 📄",
+    "Ahnaf sends you a 30-second voice note saying why you're perfect 🎤",
+    "Ahnaf sends you a funny meme he made for you 😂",
+    "Ahnaf writes you a haiku about your beauty 🌸",
+    "Ahnaf sends you a '5 things I miss about you' text 💬",
+    "Ahnaf sends a selfie with a heart drawn on his cheek ❤️",
+    "Ahnaf gives you a virtual 'pinky promise' 🤞",
+    "Ahnaf sends a 'just because' good morning text 🌅",
+    "Ahnaf sends a 'just because' good night text 🌙",
+    "Ahnaf writes your name in bubble letters 🎨",
+    "Ahnaf draws a cartoon version of you 🖌️",
+    "Ahnaf writes 'I love you' in 10 languages 🌍",
+    "Ahnaf sends you a list of 10 random things he likes about you 📝",
+    "Ahnaf makes you a 'playlist' by sending song links 🎧",
+    "Ahnaf makes a 15-second video saying why you’re the best 💖"
+  ];
+
+  function loadRedeemed() {
+    const raw = localStorage.getItem(COUPON_STORAGE_KEY);
+    if (!raw) return {};
+    try {
+      return JSON.parse(raw);
+    } catch {
+      return {};
+    }
+  }
+
+  function saveRedeemed(data) {
+    localStorage.setItem(COUPON_STORAGE_KEY, JSON.stringify(data));
+  }
+
+  function toggleRedeem(index, el) {
+    const redeemed = loadRedeemed();
+    if (redeemed[index]) {
+      // unredeem (optional)
+      redeemed[index] = false;
+      el.classList.remove('redeemed');
+      el.innerText = coupons[index];
+    } else {
+      redeemed[index] = true;
+      el.classList.add('redeemed');
+      el.innerText = "Redeemed 💖";
+    }
+    saveRedeemed(redeemed);
+  }
+
+  function renderCoupons() {
+    const container = document.getElementById('couponList');
+    container.innerHTML = '';
+    const redeemed = loadRedeemed();
+    coupons.forEach((text, i) => {
+      const card = document.createElement('div');
+      card.className = 'coupon-card';
+      if (redeemed[i]) {
+        card.classList.add('redeemed');
+        card.innerText = "Redeemed 💖";
+      } else {
+        card.innerText = text;
+      }
+      card.addEventListener('click', () => toggleRedeem(i, card));
+      container.appendChild(card);
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', renderCoupons);
 </script>
 </body>
 </html>
